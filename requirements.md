@@ -2,5 +2,6 @@
 - python -m venv venv
 
 # install pygame
-- pip install pygame
+- venv/bin/pip install pygame
+
 
