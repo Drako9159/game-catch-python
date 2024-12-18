@@ -16,6 +16,13 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
+# FPS
+FPS = 60
+
+# Sprites
+apple_image = pygame.image.load("sprites/apple.png")
+basket_image = pygame.image.load("sprites/basket.png")
+
 display = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption(TITLE)
 
