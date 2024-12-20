@@ -2,6 +2,7 @@ import pygame
 import random
 from load_sprites import Sprites
 from load_text import Strings
+from keyboard import Keyboard
 
 pygame.init()
 
@@ -74,24 +75,11 @@ while not game_over:
 
     # Keyboard by arrows
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] and basket_sprite["rect"].left > 0:
-        basket_sprite["rect"].left -= basket_velocity
-    if keys[pygame.K_RIGHT] and basket_sprite["rect"].right < WIDTH:
-        basket_sprite["rect"].right += basket_velocity
-    if keys[pygame.K_UP] and basket_sprite["rect"].top > 150:
-        basket_sprite["rect"].top -= basket_velocity
-    if keys[pygame.K_DOWN] and basket_sprite["rect"].bottom < HEIGHT:
-        basket_sprite["rect"].bottom += basket_velocity
-
-    # Keyboard by wasd
-    if keys[pygame.K_a] and basket_sprite["rect"].left > 0:
-        basket_sprite["rect"].left -= basket_velocity
-    if keys[pygame.K_d] and basket_sprite["rect"].right < WIDTH:
-        basket_sprite["rect"].right += basket_velocity
-    if keys[pygame.K_w] and basket_sprite["rect"].top > 150:
-        basket_sprite["rect"].top -= basket_velocity
-    if keys[pygame.K_s] and basket_sprite["rect"].bottom < HEIGHT:
-        basket_sprite["rect"].bottom += basket_velocity
+    
+    # Keyboard by arrows   
+    keyboard = Keyboard()
+    keyboard.control_arrows(basket_sprite["rect"], basket_velocity, WIDTH, HEIGHT)
+    keyboard.control_wasd(basket_sprite["rect"], basket_velocity, WIDTH, HEIGHT)
 
     # Apple
     if apple_sprite["rect"].y > HEIGHT:
