@@ -29,6 +29,14 @@ BASKET_ACCELERATION = 0.5
 # FPS
 FPS = 60
 
+# Difficulty
+# Options: HARD, MEDIUM, EASY
+HARD = 3
+MEDIUM = 2
+EASY = 1
+
+difficulty = MEDIUM
+
 # Clock
 clock = pygame.time.Clock()
 
@@ -40,17 +48,17 @@ basket_velocity = BASKET_VELOCITY
 
 # Load Text
 strings = Strings(WIDTH, HEIGHT, pygame, WHITE, BLACK)
-gameover_title, gameover_title_rect = strings.gameover_title()
-gameover_text, gameover_text_rect = strings.gameover_text()
-font_title_32, font_title_42, font_text = strings.get_fonts()
-lives_text, lives_rect = strings.lives_text(player_lives)
+
+gameover_title = strings.gameover_title()
+gameover_text = strings.gameover_text()
+lives = strings.lives_text(player_lives)
 score = strings.score_text(score_value)
 title = strings.title(TITLE)
 
 # Load Sprites
 sprites = Sprites(WIDTH, HEIGHT, pygame)
-basket_image, basket_rect = sprites.basket()
-apple_image, apple_rect = sprites.apple()
+basket_sprite = sprites.basket(difficulty)
+apple_sprite = sprites.apple()
 
 # Display
 display = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -64,51 +72,61 @@ while not game_over:
         if event.type == pygame.QUIT:
             game_over = True
 
-    # Keyboard
+    # Keyboard by arrows
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] and basket_rect.left > 0:
-        basket_rect.left -= basket_velocity
-    if keys[pygame.K_RIGHT] and basket_rect.right < WIDTH:
-        basket_rect.right += basket_velocity
-    if keys[pygame.K_UP] and basket_rect.top > 150:
-        basket_rect.top -= basket_velocity
-    if keys[pygame.K_DOWN] and basket_rect.bottom < HEIGHT:
-        basket_rect.bottom += basket_velocity
+    if keys[pygame.K_LEFT] and basket_sprite["rect"].left > 0:
+        basket_sprite["rect"].left -= basket_velocity
+    if keys[pygame.K_RIGHT] and basket_sprite["rect"].right < WIDTH:
+        basket_sprite["rect"].right += basket_velocity
+    if keys[pygame.K_UP] and basket_sprite["rect"].top > 150:
+        basket_sprite["rect"].top -= basket_velocity
+    if keys[pygame.K_DOWN] and basket_sprite["rect"].bottom < HEIGHT:
+        basket_sprite["rect"].bottom += basket_velocity
+
+    # Keyboard by wasd
+    if keys[pygame.K_a] and basket_sprite["rect"].left > 0:
+        basket_sprite["rect"].left -= basket_velocity
+    if keys[pygame.K_d] and basket_sprite["rect"].right < WIDTH:
+        basket_sprite["rect"].right += basket_velocity
+    if keys[pygame.K_w] and basket_sprite["rect"].top > 150:
+        basket_sprite["rect"].top -= basket_velocity
+    if keys[pygame.K_s] and basket_sprite["rect"].bottom < HEIGHT:
+        basket_sprite["rect"].bottom += basket_velocity
 
     # Apple
-    if apple_rect.y > HEIGHT:
-        apple_rect.x = random.randint(0, WIDTH - 64)
-        apple_rect.y = 140
+    if apple_sprite["rect"].y > HEIGHT:
+        apple_sprite["rect"].x = random.randint(0, WIDTH - 64)
+        apple_sprite["rect"].y = 140
         player_lives -= 1
     else:
-        apple_rect.y += apple_velocity
+        apple_sprite["rect"].y += apple_velocity
 
     # Collision
-    if basket_rect.colliderect(apple_rect):
-        apple_rect.x = random.randint(0, WIDTH - 64)
-        apple_rect.y = 100
+    if basket_sprite["rect"].colliderect(apple_sprite["rect"]):
+        apple_sprite["rect"].x = random.randint(0, WIDTH - 64)
+        apple_sprite["rect"].y = 100
         apple_velocity += APPLE_ACCELERATION
         score_value += 1
         basket_velocity += BASKET_ACCELERATION
 
-    # Score
-    score["text"] = font_text.render(f"Score: {score_value}", True, WHITE, BLACK)
-    lives_text = font_text.render(f"Lives: {player_lives}", True, WHITE, BLACK)
+    # Score and Lives
+    score["text"] = strings.score_text(score_value)["text"]
+    lives["text"] = strings.lives_text(player_lives)["text"]
 
     display.fill(BLACK)
 
     display.blit(title["text"], title["rect"])
     display.blit(score["text"], score["rect"])
-    display.blit(lives_text, lives_rect)
+    display.blit(lives["text"], lives["rect"])
 
     pygame.draw.line(display, WHITE, (0, 140), (WIDTH, 140), 3)
 
-    display.blit(apple_image,apple_rect)
-    display.blit(basket_image,basket_rect)
+    display.blit(apple_sprite["image"],apple_sprite["rect"])
+    display.blit(basket_sprite["image"],basket_sprite["rect"])
     
     if player_lives == 0:
-        display.blit(gameover_title, gameover_title_rect)
-        display.blit(gameover_text, gameover_text_rect)
+        display.blit(gameover_title["text"], gameover_title["rect"])
+        display.blit(gameover_text["text"], gameover_text["rect"])
         pygame.display.update()
         pygame.time.wait(2000)
         is_paused = True
