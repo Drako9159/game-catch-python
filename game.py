@@ -1,8 +1,8 @@
 import pygame
 import random
-from load_sprites import Sprites
-from load_text import Strings
-from keyboard import Keyboard
+from utils.load_sprites import Sprites
+from utils.load_text import Strings
+from utils.keyboard import Keyboard
 
 pygame.init()
 

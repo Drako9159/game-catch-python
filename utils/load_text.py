@@ -1,6 +1,7 @@
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FILE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(FILE_DIR)
 FONTS_DIR = os.path.join(BASE_DIR, "fonts")
 FONT_SPENBEB = os.path.join(FONTS_DIR, "spenbeb.otf")
 
